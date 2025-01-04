@@ -1,0 +1,112 @@
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background-color: #f7f7f7;
+  }
+  
+  nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 60px;
+
+    color: white;
+    padding: 0 20px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+  }
+  
+  nav .logo {
+    font-size: 24px;
+    font-weight: bold;
+    text-transform: uppercase;
+    color: #ffffff;
+    text-decoration: none;
+  }
+  
+  nav .logo:hover {
+    color: #A64D79;
+  }
+  
+  nav .menu {
+    list-style: none;
+    display: flex;
+    margin: 0;
+    padding: 0;
+    gap: 20px;
+    justify-content: center; /* This ensures the items are centered */
+    flex-grow: 1; /* Allow the menu to take up remaining space */
+  }
+  
+  nav .menu li {
+    position: relative;
+  }
+  
+  nav .menu a {
+    color: #ffffff;
+    text-decoration: none;
+    font-size: 16px;
+    font-weight: 500;
+    transition: color 0.3s ease;
+  }
+  
+  nav .menu a:hover {
+    color: #A64D79;
+  }
+  
+  nav .hamburger {
+    display: none;
+    font-size: 30px;
+    color: white;
+    cursor: pointer;
+  }
+  
+  @media (max-width: 768px) {
+    nav {
+      padding: 0 15px;
+    }
+  
+    nav .menu {
+      display: none;
+      flex-direction: column;
+      width: 100%;
+
+      position: absolute;
+      top: 60px;
+      left: 0;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    }
+  
+    nav .menu.show {
+      display: flex;
+    }
+  
+    nav .menu li {
+      text-align: center;
+      margin: 10px 0;
+    }
+  
+    nav .menu a {
+      font-size: 18px;
+    }
+  
+    nav .hamburger {
+      display: block;
+    }
+  }
+  
+  /* For very small screens */
+  @media (max-width: 480px) {
+    nav .logo {
+      font-size: 20px;
+    }
+  
+    nav .menu a {
+      font-size: 16px;
+    }
+  }
+  
