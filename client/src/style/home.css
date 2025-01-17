@@ -1,0 +1,36 @@
+.home {
+    border: 0px solid white;
+    width: 100vw;
+    height: 80vh;
+    display: flex;
+    flex-direction: row;
+
+}
+
+.home .left .text {
+    padding-left: 60px;
+}
+
+.home .left {
+    border: 0px solid white;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding-right: 60px;
+    align-items: center;
+    width: 50%;
+    /* background-color: aqua; */
+}
+
+p {
+    color: white;
+    font-size: 1em;
+    text-align: left;
+    padding-top: 20px;
+    
+}
+
+.home .right {
+    border: 0px solid white;
+    width: 50%;
+}
