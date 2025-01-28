@@ -33,4 +33,21 @@ p {
 .home .right {
     border: 0px solid white;
     width: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+@media only screen and (max-width: 800px) {
+    .home {
+        flex-direction: column;
+    }
+    .home .left {
+        width: 100%;
+        
+    }
+
+    .home .right {
+        width: 100%;
+    }
 }

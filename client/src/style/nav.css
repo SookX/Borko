@@ -29,7 +29,7 @@ body {
   }
   
   nav .logo:hover {
-    color: #A64D79;
+    color: rgb(61, 106, 255);
   }
   
   nav .menu {
@@ -55,7 +55,7 @@ body {
   }
   
   nav .menu a:hover {
-    color: #A64D79;
+    color: rgb(61, 106, 255);
   }
   
   nav .hamburger {
