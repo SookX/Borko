@@ -17,6 +17,8 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
+
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'server.settings')
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -39,6 +41,7 @@ ALLOWED_HOSTS = [
 # Application definition
 
 INSTALLED_APPS = [
+    'channels',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -47,8 +50,13 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'corsheaders',
-    'user'
+    'user',
+    'assistant'
+    
 ]
+
+ASGI_APPLICATION = "server.asgi.application"
+
 
 MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',
@@ -164,3 +172,10 @@ AUTH_USER_MODEL = 'user.CustomUser'
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:5173",
 ]
+
+
+CHANNEL_LAYERS = {
+    "default": {
+        "BACKEND": "channels.layers.InMemoryChannelLayer",
+    },
+}
