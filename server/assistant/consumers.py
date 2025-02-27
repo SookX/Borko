@@ -6,8 +6,12 @@ from pydub import AudioSegment
 import numpy as np
 from channels.generic.websocket import AsyncWebsocketConsumer
 import magic
-
+import requests
+import base64
+import numpy as np
 from pydub import AudioSegment
+import soundfile as sf
+
 
 def ogg2wav(ofn):
     wfn = ofn.replace('.ogg','.wav')
@@ -17,6 +21,8 @@ logger = logging.getLogger(__name__)
 
 import speech_recognition as sr
 import os
+
+URL = "https://e97f-146-19-88-218.ngrok-free.app"
 
 def prebuilt_speech_to_text_from_audio(audio_path: str) -> str:
 
@@ -84,7 +90,26 @@ class AudioConsumer(AsyncWebsocketConsumer):
 
             text = prebuilt_speech_to_text_from_audio('./output.wav')
 
-            print(text)
+            
+            model_output = requests.post(url=URL, json= {"prompt": text})
+
+            tts = requests.post(f'{URL}/tts', json={'text': model_output.json()['message']}).json()
+           
+            tts_audio = tts['audio_data']
+            tts_sampling_rate = tts['sampling_rate']
+
+            sf.write("tts_output.wav", tts_audio, tts_sampling_rate)
+
+
+            with open("tts_output.wav", "rb") as audio_file:
+                audio_d = audio_file.read()
+
+            enc = base64.b64encode(audio_d).decode('utf-8')
+            
+            return {
+                'audio': enc,
+                'sampling_rate': tts_sampling_rate
+            }
         
         
 

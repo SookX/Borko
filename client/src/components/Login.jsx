@@ -3,7 +3,6 @@ import axios from 'axios';
 import { useNavigate } from 'react-router-dom'; 
 import styled from 'styled-components';
 import Nav from './Nav';
-import '../style/login.css';
 
 const Form = () => {
     const [email, setEmail] = useState('');
