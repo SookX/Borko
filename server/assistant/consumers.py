@@ -22,7 +22,7 @@ logger = logging.getLogger(__name__)
 import speech_recognition as sr
 import os
 
-URL = "https://e97f-146-19-88-218.ngrok-free.app"
+URL = "https://1dd9-92-118-63-137.ngrok-free.app"
 
 def prebuilt_speech_to_text_from_audio(audio_path: str) -> str:
 
@@ -87,13 +87,14 @@ class AudioConsumer(AsyncWebsocketConsumer):
             with open("output.wav", "wb") as ogg_file:
                 ogg_file.write(audio_data)
             
-
-            text = prebuilt_speech_to_text_from_audio('./output.wav')
+            try:
+                text = prebuilt_speech_to_text_from_audio('./output.wav')
+                model_output = requests.post(url=URL, json= {"prompt": text})
+                tts = requests.post(f'{URL}/tts', json={'text': model_output.json()['message']}).json()
+            except:
+                tts = requests.post(f'{URL}/tts', json={'text': 'Извинявай, не разбрах какво ми каза!'}).json()
 
             
-            model_output = requests.post(url=URL, json= {"prompt": text})
-
-            tts = requests.post(f'{URL}/tts', json={'text': model_output.json()['message']}).json()
            
             tts_audio = tts['audio_data']
             tts_sampling_rate = tts['sampling_rate']

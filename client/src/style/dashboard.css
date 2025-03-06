@@ -6,7 +6,7 @@
 
 .main {
     border: 0px solid;
-    height: 95vh;
+    height: 90vh;
     display: flex;
     flex-direction: column;
 }
@@ -31,7 +31,25 @@
   }
 
 .blob {
-    border: 0px solid white;
+    border: 0px solid black;
     height: 100%;
     width: 100vw;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+
+.status-display {
+  border: 0px solid cadetblue;
+  width: 100vw;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.status-display p {
+  padding-left: 60px;
+  animation: ease-in;
+  font-size: 3.4rem;
 }

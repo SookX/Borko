@@ -6,57 +6,58 @@ import 'axios'
 import '../style/dashboard.css';
 import axios from 'axios';
 
-
-
-const  AudioSender = () => {
+const AudioSender = () => {
   const ws = useRef(null);
   const mediaRecorder = useRef(null);
   const audioContext = useRef(new (window.AudioContext || window.webkitAudioContext)());
   const analyser = useRef(null);
   const recordedChunks = useRef([]);
+  const [status, setStatus] = useState("Натисни кръгчето, за да зпочнеш");  // to hold status
   const silenceTimeout = useRef(null);
-  
   const [isRecording, setIsRecording] = useState(false);
   const isRecordingRef = useRef(false); 
   const [volume, setVolume] = useState(0);
 
-
-
+  // Effect to handle WebSocket connection
   useEffect(() => {
-    // Get available voices and set Russian voice
-    
-
-    ws.current = new WebSocket('ws://localhost:8000/ws/audio/');
-    ws.current.onopen = () => console.log('WebSocket connected');
-    ws.current.onmessage = (event) => {
-      
-      try {
-        const response = JSON.parse(event.data);
+    const connectWebSocket = async () => {
+      ws.current = new WebSocket('ws://localhost:8000/ws/audio/');
+      ws.current.onopen = () => console.log('WebSocket connected');
+      ws.current.onmessage = async (event) => {
+        try {
+          const response = JSON.parse(event.data);
+          if (response.transcript) {
+            setStatus(""); // reset status on new transcript
+            const audioData = `data:audio/wav;base64,${response.transcript.audio}`;
+            let audio = new Audio(audioData);
+            audio.onended = () => {
+              setStatus("Натисни кръгчето, за да зпочнеш");
+            };
         
-
-        // Speak out the transcription when received
-        if (response.transcript) {
-            const audioData = `data:audio/wav;base64,${response.transcript.audio}`
-            let audio =  new Audio(audioData);
-            
-            audio.play();
+            // Play the audio
+            await audio.play();
+          }
+        } catch (error) {
+          console.error("Error parsing WebSocket message:", error);
         }
-      } catch (error) {
-        console.error("Error parsing WebSocket message:", error);
-      }
+      };
+
+      ws.current.onerror = (error) => console.error('WebSocket error:', error);
+      ws.current.onclose = () => console.log('WebSocket disconnected');
     };
 
-    ws.current.onerror = (error) => console.error('WebSocket error:', error);
-    ws.current.onclose = () => console.log('WebSocket disconnected');
+    connectWebSocket();
 
     return () => {
       if (ws.current) {
         ws.current.close();
       }
     };
-  }, []);
+  }, []);  // Empty dependency array to run only on mount/unmount
 
+  // Function to start recording
   const startRecording = async () => {
+    setStatus("Борко те слуша...");
     try {
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
       const sourceNode = audioContext.current.createMediaStreamSource(stream);
@@ -114,6 +115,7 @@ const  AudioSender = () => {
     }
   };
 
+  // Function to stop recording
   const stopRecording = () => {
     if (mediaRecorder.current && isRecordingRef.current) {
       mediaRecorder.current.stop();
@@ -127,7 +129,9 @@ const  AudioSender = () => {
     }
   };
 
+  // Process the audio chunk
   const processAudioChunk = async (blob) => {
+    setStatus("Борко мисли...");
     const arrayBuffer = await blob.arrayBuffer();
     const audioBuffer = await audioContext.current.decodeAudioData(arrayBuffer);
     const wavBuffer = toWav(audioBuffer);
@@ -139,7 +143,7 @@ const  AudioSender = () => {
     }
   };
 
-
+  // Button component to handle the recording button
   const Button = () => {
     return (
         <button onClick={startRecording} disabled={isRecording}>
@@ -153,6 +157,9 @@ const  AudioSender = () => {
 
   return (
     <div className="main">
+      <div className="status-display">
+        <p>{status}</p>  
+      </div>
       <div className="blob">
         <Spline scene="https://prod.spline.design/tBczwsyOuZBxVhYS/scene.splinecode" onClick={startRecording} />
       </div>
